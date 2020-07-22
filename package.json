@@ -9,7 +9,7 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "run-inspect": "node --inspect dist/index.js",
     "run": "node dist/index.js",
-    "src-watch": "nodemon dist/index.js",
+    "src-watch": "nodemon --exec node --inspect=9240  dist/index.js",
     "start-inspect": "npm-run-all build run-inspect",
     "start": "npm-run-all build run",
     "test": "echo \"Error: no test specified\" && exit 1",
