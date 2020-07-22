@@ -2,6 +2,11 @@ import discord, { VoiceChannel } from 'discord.js';
 import config from 'config';
 
 const DISCORD_TOKEN = config.get<string>('discord.token');
+const TARGET_USER_IDS = config.get<string[]>('discord.targetUserIds');
+const TARGET_CHANNEL_IDS = config.get<string[]>('discord.targetChannelIds');
+
+const targetUserIdSet = new Set(TARGET_USER_IDS);
+const targetChannleIdSet = new Set(TARGET_CHANNEL_IDS);
 
 console.log(DISCORD_TOKEN);
 const voiceLines = [ `resource/voiceLines/imhereforyouboos100%.mp3` ];
@@ -25,6 +30,9 @@ bot.on('message', async (message) => {
 
 bot.on('voiceStateUpdate', async (oldState, newState) => {
     console.log('Voice State Update');
+    const isJoining = oldState.channelID !== newState.channelID;
+    console.log(oldState.channelID);
+    console.log(newState.channelID);
     // console.log(oldState.member?.user.tag);
     // console.log(newState.member?.user?.tag);
     const user = newState.member?.user;
@@ -37,9 +45,25 @@ bot.on('voiceStateUpdate', async (oldState, newState) => {
         return;
     }
     console.log(`User: ${user.tag}`);
+    const userId = newState.member?.id;
     const channel = newState.member?.voice.channel;
-    if (!channel) {
+    const channelId = newState.member?.voice.channelID;
+    if (!userId) {
+        console.log('No Member.');
+        return;
+    }
+    if (!channel || !channelId) {
         console.log('Member Voice Channel Not Exists');
+        return;
+    }
+    if (!targetUserIdSet.has(userId) || !targetChannleIdSet.has(channelId)) {
+        console.log('Not a target');
+        return;
+    }
+    if (!isJoining) {
+        console.log('User not joining a server');
+        // console.log(oldState);
+        // console.log(newState);
         return;
     }
     console.log('Joining Channel !');
