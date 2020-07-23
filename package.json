@@ -7,6 +7,7 @@
     "build-watch": "tsc -w",
     "build": "tsc",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "production": "npm-run-all build run",
     "run-inspect": "node --inspect dist/index.js",
     "run": "node dist/index.js",
     "src-watch": "nodemon --exec node --inspect=9240  dist/index.js",
